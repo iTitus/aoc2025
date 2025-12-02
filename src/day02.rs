@@ -44,26 +44,18 @@ pub fn part1(input: &[Range]) -> u64 {
 fn is_repeated_at_least_twice(n: u64) -> bool {
     let s = n.to_string();
     let len = s.len();
-    'outer: for part_len in 1.. {
-        if part_len > len {
-            break 'outer;
-        }
-
+    for part_len in 1..=(len / 2) {
         if !len.is_multiple_of(part_len) {
-            continue 'outer;
+            continue;
         }
 
         let (prefix, mut rest) = s.split_at(part_len);
-        loop {
-            if let Some(rest_) = rest.strip_prefix(prefix) {
-                if rest_.is_empty() {
-                    return true;
-                }
-
-                rest = rest_;
-            } else {
-                continue 'outer;
+        while let Some(rest_) = rest.strip_prefix(prefix) {
+            if rest_.is_empty() {
+                return true;
             }
+
+            rest = rest_;
         }
     }
 
