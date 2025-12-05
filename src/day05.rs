@@ -1,5 +1,6 @@
 use crate::common::parse_lines;
 use aoc_runner_derive::{aoc, aoc_generator};
+use itertools::Itertools;
 use std::str::FromStr;
 
 #[derive(Debug, Copy, Clone)]
@@ -39,37 +40,29 @@ pub fn part1(input: &(Vec<Range>, Vec<u64>)) -> usize {
 
 #[aoc(day5, part2)]
 pub fn part2(input: &(Vec<Range>, Vec<u64>)) -> u64 {
-    let mut ranges: Vec<Range> = vec![];
-    let mut to_add = input.0.clone();
-    'outer: while let Some(mut r) = to_add.pop() {
-        for existing in &mut ranges {
-            // full inclusion
-            if r.0 > r.1 || r.0 >= existing.0 && r.1 <= existing.1 {
-                continue 'outer;
-            }
-
-            // other way inclusion
-            if existing.0 > r.0 && existing.1 < r.1 {
-                to_add.push(Range(existing.1 + 1, r.1));
-                r.1 = existing.0 - 1;
-            }
-
-            // a little bit of overlap one side
-            if (existing.0..=existing.1).contains(&r.0) {
-                assert!(existing.1 < u64::MAX);
-                r.0 = existing.1 + 1;
-            }
-
-            // a little bit of overlap on the other side
-            if (existing.0..=existing.1).contains(&r.1) {
-                assert!(existing.0 > 0);
-                r.1 = existing.0 - 1;
-            }
+    let mut ranges = vec![];
+    let mut current = None;
+    for r in input.0.iter().copied().sorted_unstable_by_key(|r| r.0) {
+        if r.0 > r.1 {
+            continue;
         }
-        ranges.push(r);
-    }
 
-    ranges.iter().map(|r| r.1 - r.0 + 1).sum()
+        let Some(cur) = &mut current else {
+            current = Some(r);
+            continue;
+        };
+
+        debug_assert!(r.0 >= cur.0);
+        if r.0 <= (cur.1 + 1) {
+            cur.1 = cur.1.max(r.1);
+        } else {
+            ranges.push(*cur);
+            current = Some(r);
+        }
+    }
+    ranges.extend(current);
+
+    ranges.into_iter().map(|r| r.1 - r.0 + 1).sum()
 }
 
 #[cfg(test)]
