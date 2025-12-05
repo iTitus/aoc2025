@@ -1,6 +1,5 @@
 use crate::common::{Grid, Vec2i};
 use aoc_runner_derive::{aoc, aoc_generator};
-use std::str::FromStr;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Tile {
