@@ -33,7 +33,7 @@ pub fn part1(input: &(Vec<Range>, Vec<u64>)) -> usize {
             input
                 .0
                 .iter()
-                .any(|range| (range.0..=range.1).contains(&id))
+                .any(|range| (range.0..=range.1).contains(id))
         })
         .count()
 }
