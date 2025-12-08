@@ -29,12 +29,7 @@ pub fn part1(input: &(Vec<Range>, Vec<u64>)) -> usize {
     input
         .1
         .iter()
-        .filter(|id| {
-            input
-                .0
-                .iter()
-                .any(|range| (range.0..=range.1).contains(id))
-        })
+        .filter(|id| input.0.iter().any(|range| (range.0..=range.1).contains(id)))
         .count()
 }
 
