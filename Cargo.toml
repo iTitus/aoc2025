@@ -23,6 +23,7 @@ serde_json = "1"
 rustc-hash = "2.1"
 thiserror = "2.0"
 tinyvec = { version = "1.10", features = ["std", "grab_spare_slice", "serde", "rustc_1_61"] }
+good_lp = { version = "1.14", features = ["microlp"], default-features = false }
 
 [dev-dependencies]
 pretty_assertions = "1.4"
