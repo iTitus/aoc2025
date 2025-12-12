@@ -64,6 +64,8 @@ pub fn part2(input: &[Vec2i]) -> u64 {
             if end_x > min_x && start_x < max_x && end_y > min_y && start_y < max_y {
                 continue 'outer;
             }
+
+            // TODO: also check if only the two corners intersects with the polygon and the between space is outside!
         }
 
         max_area = area;
