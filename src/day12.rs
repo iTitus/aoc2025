@@ -85,19 +85,27 @@ pub fn input_generator(input: &str) -> (Vec<Shape>, Vec<Region>) {
 
 fn fits(region: &Region, shapes: &[Shape]) -> bool {
     let region_size = region.width as usize * region.height as usize;
+    let max_required_space: usize = region
+        .shapes
+        .iter()
+        .enumerate()
+        .map(|(i, &amount)| amount as usize * shapes[i].grid.size_x * shapes[i].grid.size_y)
+        .sum();
     let min_required_space: usize = region
         .shapes
         .iter()
         .enumerate()
         .map(|(i, &amount)| amount as usize * shapes[i].block_count)
         .sum();
-    if min_required_space > region_size {
+    if region_size >= max_required_space {
+        return true;
+    } else if region_size < min_required_space {
         return false;
     }
 
     // TODO: actually check this?
     // seems to just work for my input, but not for the example...
-    true
+    unimplemented!("{min_required_space}-{max_required_space} for region {region_size}");
 }
 
 #[aoc(day12, part1)]
@@ -107,9 +115,6 @@ pub fn part1(input: &(Vec<Shape>, Vec<Region>)) -> usize {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use pretty_assertions::assert_eq;
-
     const INPUT: &str = r#"0:
 ###
 ##.
